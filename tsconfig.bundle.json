@@ -27,5 +27,5 @@
     "src/**/*.tsx",
     "src/**/*.vue"
   ],
-  "exclude": ["src/dev", "src/mind-snake"]
+  "exclude": ["src/example"]
 }
