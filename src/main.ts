@@ -4,8 +4,8 @@ import type { ArrayStore, StoreItem, StoreMethods } from './types';
 export function createArrayStore<
   ItemType extends StoreItem,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  Methods extends StoreMethods = any,
->(initItems?: ItemType[], methods?: Methods) {
+  Methods = unknown,
+>(initItems?: ItemType[], methods?: StoreMethods<ItemType, Methods>) {
   const store = ref<ItemType[]>(initItems || []);
 
   const self: ArrayStore<ItemType, Methods> = {
@@ -70,8 +70,11 @@ export function createArrayStore<
         }
       }
     },
-    methods: methods || ({} as Methods),
+    methods: {} as never,
   };
+  if (methods) {
+    self.methods = methods(self);
+  }
 
   return self;
 }
