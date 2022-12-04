@@ -1,6 +1,6 @@
 {
   "name": "@banez/vue-array-store",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Simple array store for Vue 3.",
   "main": "./index.js",
   "types": "./index.d.ts",
