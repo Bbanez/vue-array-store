@@ -1,11 +1,15 @@
 import { ref } from 'vue';
-import type { ArrayStore, StoreItem, StoreMethods } from './types';
+import type { ArrayStore, StoreMethods } from './types';
 
 export function createArrayStore<
-  ItemType extends StoreItem,
+  ItemType,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   Methods = unknown,
->(initItems?: ItemType[], methods?: StoreMethods<ItemType, Methods>) {
+>(
+  idKey: keyof ItemType,
+  initItems?: ItemType[],
+  methods?: StoreMethods<ItemType, Methods>,
+) {
   const store = ref<ItemType[]>(initItems || []);
 
   const self: ArrayStore<ItemType, Methods> = {
@@ -22,7 +26,7 @@ export function createArrayStore<
       return null;
     },
     findById(id) {
-      const output = store.value.find((e) => e.id === id);
+      const output = store.value.find((e) => e[idKey] === id);
       return (output as ItemType) || null;
     },
     findMany(query) {
@@ -36,7 +40,9 @@ export function createArrayStore<
       return output;
     },
     findManyById(ids) {
-      return store.value.filter((e) => ids.includes(e.id)) as ItemType[];
+      return store.value.filter((e) =>
+        ids.includes(e[idKey as never]),
+      ) as ItemType[];
     },
     set(inputItems) {
       const items = inputItems instanceof Array ? inputItems : [inputItems];
@@ -45,7 +51,7 @@ export function createArrayStore<
         let found = false;
         for (let j = 0; j < store.value.length; j++) {
           const storeItem = store.value[j];
-          if (storeItem.id === inputItem.id) {
+          if (storeItem[idKey] === inputItem[idKey]) {
             found = true;
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             store.value.splice(j, 1, inputItem as any);
@@ -64,7 +70,7 @@ export function createArrayStore<
         const id = ids[i];
         for (let j = 0; j < store.value.length; j++) {
           const item = store.value[j];
-          if (item.id === id) {
+          if (item[idKey] === id) {
             store.value.splice(j, 1);
           }
         }

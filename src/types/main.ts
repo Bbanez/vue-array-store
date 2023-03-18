@@ -1,17 +1,13 @@
-export interface StoreItem {
-  id: string;
-}
-
-export interface StoreQuery<ItemType extends StoreItem> {
+export interface StoreQuery<ItemType> {
   (item: ItemType): boolean | number | string | unknown;
 }
 
-export interface StoreMethods<ItemType extends StoreItem, Methods = unknown> {
+export interface StoreMethods<ItemType, Methods = unknown> {
   (store: ArrayStore<ItemType>): Methods;
 }
 
 export interface ArrayStore<
-  ItemType extends StoreItem,
+  ItemType,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   Methods = unknown,
 > {
